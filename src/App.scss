@@ -1,0 +1,6 @@
+@use 'variables';
+
+.App {
+	padding: 40px;
+	background-color: variables.$grey;
+}
