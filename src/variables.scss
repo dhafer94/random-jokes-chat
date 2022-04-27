@@ -1,9 +1,25 @@
+//colors
 $white: #fff;
 $light-grey: #fafafa;
 $grey: #f1f1f1;
 $dark: #434753;
-$date-and-time: #c5c5c5;
 $subtext: #cbcbcb;
 $text-light: #a9b0af;
 $text-dark: #a8a49d;
 $light-blue: #49b8dc;
+$borders-color: #e9e9e9;
+
+//properties
+$borders: 2px solid $borders-color;
+
+@mixin contact-image {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	margin-right: 10px;
+	margin-right: 1vw;
+}
+
+// @mixin break {
+// 	flex-basis: 100%;
+// }

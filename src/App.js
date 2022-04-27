@@ -3,33 +3,236 @@ import './App.scss';
 
 function App() {
 	const [joke, setJoke] = useState();
+	const [activeContact, setActiveContact] = useState();
+
+	const contacts = [
+		{
+			name: 'Joseph',
+			status: true,
+			img: 'https://placekitten.com/100/100',
+			messages: [
+				{
+					text: 'Hi, how are you ?',
+					dateTime: '2022-04-27T09:24:09.636Z',
+					direction: 'in',
+				},
+				{
+					text: 'Fine, you?',
+					dateTime: '2022-04-27T09:24:09.636Z',
+					direction: 'out',
+				}, {
+					text: 'Hi, how are you ?',
+					dateTime: '2022-04-27T09:24:09.636Z',
+					direction: 'in',
+				},
+				{
+					text: 'Fine, you?',
+					dateTime: '2022-04-27T09:24:09.636Z',
+					direction: 'out',
+				}, {
+					text: 'Hi, how are you ?',
+					dateTime: '2022-04-27T09:24:09.636Z',
+					direction: 'in',
+				},
+
+				// {
+				// 	text: 'Fine, you?',
+				// 	date: '4/25/2022',
+				// 	time: '10:31:00 AM',
+				// 	direction: 'in',
+				// },
+			],
+		},
+	];
+
+	// console.log(date, time);
 
 	const fetchJoke = async () => {
 		const res = await fetch('https://api.chucknorris.io/jokes/random');
 		const data = await res.json();
-		setJoke(data.value);
+
+		let now = new Date();
+		let dateTime = now.toISOString();
+
+		setJoke({
+			// id: '1',
+			text: data.value,
+			dateTime: dateTime,
+			direction: 'in',
+		});
 	};
-	// console.log(joke);
+
+	const handleContactClick = (i) => {
+		setActiveContact(contacts[i]);
+	};
 
 	return (
 		<div className='App'>
 			<div className='left-main-container'>
 				<div className='left-top-container'>
-					<div className='user-container'></div>
-					<div className='searchbar'></div>
+					<div className='user-container'>
+						<img className='user-img' src='./profile.png' alt='' />
+					</div>
+					<input
+						type='text'
+						className='searchbar'
+						placeholder='search or start a new '
+					/>
 				</div>
 				<div className='left-bottom-container'>
-					<div className='chats-title'></div>
-					<div className='chats-contacts'></div>
+					<div className='chats-title'> chats </div>
+					<div className='chats-contacts'>
+						{contacts.map((contact, i) => (
+							<div
+								onClick={() => handleContactClick(i)}
+								className='contact-container'
+								key={i}>
+								<img
+									key={i + 10000}
+									className='contact-image'
+									src={contact.img}
+									alt='contact'
+								/>
+								<div key={i} className='contact-right-container'>
+									<p className='contact-name' key={i}>
+										{contact.name}
+									</p>
+									<p className='contact-last-msg-date' key={i + 1000}>
+										{new Date(
+											contact.messages[contact.messages.length - 1].dateTime,
+										).toLocaleDateString('en-US', {
+											day: '2-digit',
+											month: 'short',
+											year: 'numeric',
+										})}
+									</p>
+									<div key={i + 200000} className='break'></div>
+
+									<p key={i + 2000} className='contact-latest-msg'>
+										{contact.messages[contact.messages.length - 1].text}
+									</p>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 			<div className='right-main-container'>
-				<div className='right-top-container'></div>
-				<div className='right-middle-container'></div>
-				<div className='right-bottom-container'></div>
+				<div className='right-top-container'>
+					<img
+						className='active-contact-image'
+						src={
+							typeof activeContact !== 'undefined'
+								? activeContact.img
+								: contacts[contacts.length - 1].img
+						}
+						alt='contact'
+					/>
+
+					<h2 className='title-contact-name'>
+						{typeof activeContact !== 'undefined'
+							? activeContact.name
+							: contacts[contacts.length - 1].name}
+					</h2>
+				</div>
+				<div className='right-middle-container'>
+					{typeof activeContact !== 'undefined'
+						? activeContact.messages.map((msg, i) => (
+							<div
+								key={i}
+								className={
+									msg.direction === 'in'
+										? 'message-container-lt'
+										: 'message-container-rt'
+								}>
+								<div key={i} className='message-inner-container'>
+									{msg.direction === 'in' ? (
+										<img
+											key={i}
+											className='contact-image'
+											src={activeContact.img}
+											alt='contact'
+										/>
+									) : null}
+									<div key={i} className='text-and-date-containter'>
+										<p
+											key={i}
+											className={
+												msg.direction === 'in'
+													? 'contact-msg-text-dark'
+													: 'contact-msg-text-light'
+											}>
+											{msg.text}
+										</p>
+										<p key={i} className='contact-msg-date-time'>
+											{new Date(msg.dateTime).toLocaleDateString('en-US', {
+												dateStyle: 'short',
+											})}{' '}
+											,{' '}
+											{new Date(msg.dateTime).toLocaleTimeString('en-US', {
+												hour12: 'true',
+												hour: 'numeric',
+												minute: '2-digit',
+											})}
+										</p>
+									</div>
+								</div>
+							</div>
+						))
+						: contacts[contacts.length - 1].messages.map((msg, i) => (
+							<div
+								key={i}
+								className={
+									msg.direction === 'in'
+										? 'message-container-lt'
+										: 'message-container-rt'
+								}>
+								<div key={i} className='message-inner-container'>
+									{msg.direction === 'in' ? (
+										<img
+											key={i}
+											className='contact-image'
+											src={contacts[contacts.length - 1].img}
+											alt='contact'
+										/>
+									) : null}
+									<div key={i + 5000} className='text-and-date-containter'>
+										<p
+											key={i + 4000}
+											className={
+												msg.direction === 'in'
+													? 'contact-msg-text-dark'
+													: 'contact-msg-text-light'
+											}>
+											{msg.text}
+										</p>
+										<p key={i + 1000} className='contact-msg-date-time'>
+											{new Date(msg.dateTime).toLocaleDateString('en-US', {
+												dateStyle: 'short',
+											})}{' '}
+											,{' '}
+											{new Date(msg.dateTime).toLocaleTimeString('en-US', {
+												hour12: 'true',
+												hour: 'numeric',
+												minute: '2-digit',
+											})}
+										</p>
+									</div>
+								</div>
+							</div>
+						))}
+				</div>
+				<div className='right-bottom-container'>
+					<input
+						className='msg-box'
+						placeholder='Type your message'
+						type='text'
+						name=''
+					/>
+				</div>
 			</div>
-			{/* <button onClick={fetchJoke}>Make a joke</button>
-			{joke} */}
+			{/* <button onClick={fetchJoke}>Make a joke</button> */}
+			{/* {joke} */}
 		</div>
 	);
 }
