@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/random-jokes-chat-bot/static/css/main.b5da9746.css",
-    "main.js": "/random-jokes-chat-bot/static/js/main.fd15f3b0.js",
+    "main.js": "/random-jokes-chat-bot/static/js/main.719f3503.js",
     "index.html": "/random-jokes-chat-bot/index.html",
     "main.b5da9746.css.map": "/random-jokes-chat-bot/static/css/main.b5da9746.css.map",
-    "main.fd15f3b0.js.map": "/random-jokes-chat-bot/static/js/main.fd15f3b0.js.map"
+    "main.719f3503.js.map": "/random-jokes-chat-bot/static/js/main.719f3503.js.map"
   },
   "entrypoints": [
     "static/css/main.b5da9746.css",
-    "static/js/main.fd15f3b0.js"
+    "static/js/main.719f3503.js"
   ]
 }
