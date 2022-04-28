@@ -119,7 +119,6 @@ function App() {
 		console.log('clicked');
 	};
 	const responseFacebook = (res) => {
-		console.log(res);
 		// setUserEmail(res.email);
 		setUserPicture(res.picture.data.url);
 		if (!isLoggedIn) {
@@ -148,10 +147,12 @@ function App() {
 				</div>
 				<div className='left-bottom-container'>
 					<div className='chats-title'> chats </div>
-					<ChatContacts
-						handleContactClick={handleContactClick}
-						filteredContacts={filteredContacts}
-					/>
+					{isLoggedIn ? (
+						<ChatContacts
+							handleContactClick={handleContactClick}
+							filteredContacts={filteredContacts}
+						/>
+					) : null}
 				</div>
 			</div>
 			<div className='right-main-container'>
