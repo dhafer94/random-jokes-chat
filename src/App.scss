@@ -64,7 +64,7 @@
 					cursor: pointer;
 					display: flex;
 					flex-direction: row;
-					flex-wrap: wrap;
+					flex-wrap: nowrap;
 					color: vars.$dark;
 					align-items: flex-start;
 					margin-top: 30px;
@@ -77,6 +77,8 @@
 					}
 
 					& .contact-right-container {
+						display: flex;
+						flex-direction: column;
 						& .contact-name {
 							margin: 0;
 						}
@@ -97,6 +99,9 @@
 							color: vars.$text-dark;
 							font-size: 15px;
 							margin-top: 5px;
+							width: 70%;
+							text-align: justify;
+							// word-wrap: break-word;
 						}
 					}
 				}
@@ -189,6 +194,8 @@
 			height: 10vh;
 			margin-top: 2vh;
 			// border: 1px solid red;
+			position: relative;
+			align-items: center;
 
 			& .msg-box {
 				margin: auto;
@@ -202,6 +209,10 @@
 				padding-left: 20px;
 				padding-right: 20px;
 				background-color: vars.$white;
+			}
+			& .send-vector {
+				position: absolute;
+				right: 5vw;
 			}
 		}
 	}
