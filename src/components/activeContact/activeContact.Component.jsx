@@ -5,10 +5,10 @@ function ActiveContact({ activeContact }) {
 		<div className='right-top-container'>
 			{activeContact.map((c, i) => (
 				<img
-					key={i}
 					className='active-contact-image'
 					src={c.img}
 					alt='contact'
+					key={i}
 				/>
 			))}
 			<h2 className='title-contact-name'>{activeContact.map((c) => c.name)}</h2>
