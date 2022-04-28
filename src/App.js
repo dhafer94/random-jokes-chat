@@ -4,7 +4,6 @@ import SearchField from './components/searchField/SearchField.Component';
 import ChatContacts from './components/chatContacts/ChatContacts.Component';
 import ActiveContact from './components/activeContact/activeContact.Component';
 import Chat from './components/Chat/Chat.Component';
-import _ from 'lodash';
 
 import './App.scss';
 
@@ -81,7 +80,7 @@ function App() {
 			],
 		},
 	]);
-	const [activeContact, setActiveContact] = useState([contacts[0]]);
+	const [activeContact, setActiveContact] = useState([]);
 	// const [joke, setJoke] = useState('');
 	const [searchField, setSearchField] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useLocalStorage('isLoggedIn', false);
@@ -91,6 +90,11 @@ function App() {
 	);
 	const [msgBox, setMsgBox] = useState('');
 
+	const scrollToBottom = (id) => {
+		var element = document.getElementById(id);
+
+		element.scrollTop = element.scrollHeight;
+	};
 	const onMsgBoxChange = (e) => {
 		let now = new Date();
 		let dateTime = now.toISOString();
@@ -128,21 +132,28 @@ function App() {
 	};
 
 	const handleSend = () => {
-		const newContacts = [...contacts];
+		const oldContacts = [...contacts];
 		let now = new Date();
 		let dateTime = now.toISOString();
 		const contact = contacts.filter((c) => c.name === activeContact[0].name);
-		const contactIndex = contacts.findIndex(
-			(c) => c.name === activeContact[0].name,
-		);
-		const msg = msgBox;
-		console.log(JSON.stringify(msg));
-		if (msg.length !== 0 && msg.text.replace(/\s/g, '') !== '') {
-			contact[0].messages.push(msgBox);
-			// set
-			newContacts.splice(contactIndex, 1, contact[0]);
 
-			setContacts([...newContacts]);
+		const msg = msgBox;
+
+		if (
+			activeContact.length > 0 &&
+			msg.length !== 0 &&
+			msg.text.replace(/\s/g, '') !== ''
+		) {
+			contact[0].messages.push(msgBox);
+			const list = [
+				...contact,
+				...oldContacts.filter((c) => c.name !== activeContact[0].name),
+			];
+			// newContacts.splice(contactIndex, 1);
+			// newContacts.splice(0, 0, contact[0]);
+
+			setContacts([...list]);
+			scrollToBottom('chats');
 
 			fetchJoke(url).then((joke) => {
 				const newJoke = {
@@ -152,21 +163,26 @@ function App() {
 					direction: 'in',
 				};
 				contact[0].messages.push(newJoke);
+				const list = [
+					...contact,
+					...oldContacts.filter((c) => c.name !== activeContact[0].name),
+				];
 
-				newContacts.splice(contactIndex, 1, contact[0]);
+				setContacts([...list]);
 
-				setContacts(newContacts);
-
-				// console.log(joke.value);
+				setTimeout(() => {
+					scrollToBottom('chats');
+				}, 0);
 			});
 		}
-		window.scrollTo(0, document.body.scrollHeight);
 	};
 
 	const handleContactClick = (i) => {
 		setActiveContact([contacts[i]]);
+		setTimeout(() => {
+			scrollToBottom('chats');
+		}, 0);
 	};
-	// console.log(msgBox);
 	return (
 		<div className='App'>
 			<div className='left-main-container'>
@@ -185,9 +201,8 @@ function App() {
 				</div>
 			</div>
 			<div className='right-main-container'>
-				<ActiveContact activeContact={activeContact} contacts={contacts} />
-
-				<div className='right-middle-container'>
+				<ActiveContact activeContact={activeContact} />
+				<div id='chats' className='right-middle-container'>
 					<Chat activeContact={activeContact} />
 				</div>
 				<div className='right-bottom-container'>
