@@ -4,82 +4,13 @@ import SearchField from './components/searchField/SearchField.Component';
 import ChatContacts from './components/chatContacts/ChatContacts.Component';
 import ActiveContact from './components/activeContact/activeContact.Component';
 import Chat from './components/Chat/Chat.Component';
+import FacebookLogin from 'react-facebook-login';
+import { staticContacts } from './staticContacts';
 
 import './App.scss';
 
 function App() {
-	const [contacts, setContacts] = useState([
-		{
-			name: 'Joseph',
-			status: true,
-			img: 'https://placekitten.com/100/100',
-			messages: [
-				{
-					text: 'Hi, how are you ?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-				{
-					text: 'Fine, you?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'out',
-				},
-				{
-					text: "I'm ok too, thanks",
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-				{
-					text: 'How can I help you ?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-
-				{
-					text: 'What is Lorem Ipsum??',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'out',
-				},
-				{
-					text: 'Lorem Ipsum',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-			],
-		},
-		{
-			name: 'Alexander',
-			status: true,
-			img: 'https://placekitten.com/200/100',
-			messages: [
-				{
-					text: 'Hi, how are you ?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-				{
-					text: 'Fine, you?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'out',
-				},
-				{
-					text: 'Hi, how are you ?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-				{
-					text: 'Fine, you?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'out',
-				},
-				{
-					text: 'Hi, how are you ?',
-					dateTime: '2022-04-27T09:24:09.636Z',
-					direction: 'in',
-				},
-			],
-		},
-	]);
+	const [contacts, setContacts] = useLocalStorage('contacts', staticContacts);
 	const [activeContact, setActiveContact] = useState([]);
 	// const [joke, setJoke] = useState('');
 	const [searchField, setSearchField] = useState('');
@@ -111,8 +42,8 @@ function App() {
 	const onSearchChange = (e) => {
 		setSearchField(e.target.value);
 	};
-	const filteredContacts = contacts.filter((robots) => {
-		return robots.name.toLowerCase().includes(searchField.toLowerCase());
+	const filteredContacts = contacts.filter((contact) => {
+		return contact.name.toLowerCase().includes(searchField.toLowerCase());
 	});
 
 	let url = 'https://api.chucknorris.io/jokes/random';
@@ -149,8 +80,6 @@ function App() {
 				...contact,
 				...oldContacts.filter((c) => c.name !== activeContact[0].name),
 			];
-			// newContacts.splice(contactIndex, 1);
-			// newContacts.splice(0, 0, contact[0]);
 
 			setContacts([...list]);
 			scrollToBottom('chats');
@@ -183,12 +112,37 @@ function App() {
 			scrollToBottom('chats');
 		}, 0);
 	};
+	// const responseFacebook = (response) => {
+	// 	console.log(response);
+	// };
+	const componentClicked = () => {
+		console.log('clicked');
+	};
+	const responseFacebook = (res) => {
+		console.log(res);
+		// setUserEmail(res.email);
+		setUserPicture(res.picture.data.url);
+		if (!isLoggedIn) {
+			setIsLoggedIn(true);
+		}
+	};
 	return (
 		<div className='App'>
 			<div className='left-main-container'>
 				<div className='left-top-container'>
 					<div className='user-container'>
 						<img className='user-img' src={userPicture} alt='' />
+						{!isLoggedIn ? (
+							<FacebookLogin
+								size='small'
+								cssClass='fb-login'
+								appId='385270603504942'
+								autoLoad={false}
+								fields='name,picture'
+								onClick={componentClicked}
+								callback={responseFacebook}
+							/>
+						) : null}
 					</div>
 					<SearchField onSearchChange={onSearchChange} />
 				</div>

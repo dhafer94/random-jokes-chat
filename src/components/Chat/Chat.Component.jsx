@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Chat({ activeContact, contacts }) {
+function Chat({ activeContact }) {
 	return activeContact.length > 0
 		? activeContact[0].messages.map((msg, i) => (
 				<div
